@@ -19,11 +19,8 @@ app.use(bodyParser.json());
 var bookRouter = require('./routes/bookRouter.js')();
 
 
-app.use('/api', bookRouter);
+app.use('/books', bookRouter);
 
-app.get('/', function (req, res) {
-    res.send("Nasko");
-});
 
 app.listen(port, function () {
     console.log('Server is running on port: ' + port);

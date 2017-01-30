@@ -8,7 +8,7 @@ var routes = function(){
     var Book = require('../models/bookModel');
     var bookRouter = express.Router();
 
-        bookRouter.route('/books')
+        bookRouter.route('/')
         .get(function(req, res){
                 var query = {};
                 if(req.query.genre){
@@ -30,14 +30,32 @@ var routes = function(){
 
             });
 
-        bookRouter.route('/books/:bookId')
+        bookRouter.use('/:bookId', function(req, res, next){
+            Book.findById(req.params.bookId, function(err, book){
+                if(err){
+                    res.status(404).send("err finding by Id: ");
+                }
+                else if(book){
+                 req.book = book;
+                    next();
+                }
+                else{
+                    req.status(404).send("No book found");
+                }
+            })
+        });
+        bookRouter.route('/:bookId')
             .get(function(req, res){
-                Book.findById(req.params.bookId,function(err, book){
-                    if(err){
-                        res.status(500).send('Cant get single book');
-                    }
-                    res.json(book);
-                })
+                res.json(req.book);
+            })
+            .put(function(req, res){
+                    req.book.title = req.body.title;
+                    req.book.genre = req.body.genre;
+                    req.book.read = req.body.read;
+                    req.book.author = req.body.author;
+                    req.book.save();
+                    res.json(req.book);
+
             });
 
 
