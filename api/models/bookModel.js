@@ -7,7 +7,7 @@
 var bookSchema = new Schema({
     title:{type:String},
     author:{type:String},
-    gender:{type:String},
+    genre:{type:String},
     read:{
         type:Boolean,
         default:false
